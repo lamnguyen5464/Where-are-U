@@ -30,18 +30,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapViewModel = MapViewModel(this)
 
         mapViewModel.checkLocationPermission()
-
-        mapViewModel.getLocation()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-//        mMap = googleMap
-//
-//        // Add a marker in Sydney and move the camera
-//        val sydney = LatLng(10.727818, 106.721800)
-//        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(15f))
+        mapViewModel.setMap(googleMap)
     }
 
     override fun onRequestPermissionsResult(

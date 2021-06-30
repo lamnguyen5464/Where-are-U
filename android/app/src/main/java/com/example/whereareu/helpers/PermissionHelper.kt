@@ -3,11 +3,7 @@ package com.example.whereareu.helpers
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.provider.Settings
-import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
 class PermissionHelper {
@@ -26,14 +22,6 @@ class PermissionHelper {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 PERMISSION_LOCATION_CODE
             )
-        }
-
-        fun handlePermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
-        ) {
-
         }
 
     }
