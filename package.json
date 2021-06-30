@@ -9,7 +9,7 @@
     "backend": "cd backend && yarn start ; cd ..",
     "ios": "node setup.js ios && cd ios && rm -rf Pods && rm -rf Podfile.lock && pod install ; cd ..",
     "android": "node setup.js android",
-    "git_commit": "node setup.js commit",
-    "git_amend": "git add . && git commit --amend"
+    "commit": "node setup.js commit",
+    "amend": "git add . && git commit --amend"
   }
 }

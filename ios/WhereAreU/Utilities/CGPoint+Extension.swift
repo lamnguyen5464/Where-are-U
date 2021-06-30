@@ -1,10 +1,3 @@
-//
-//  Extension+CGPoint.swift
-//  Canvas-iOS
-//
-//  Created by Lam Nguyen on 26/06/2021.
-//
-
 import Foundation
 import UIKit
 

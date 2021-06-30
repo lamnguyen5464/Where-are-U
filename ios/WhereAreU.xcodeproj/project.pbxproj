@@ -19,6 +19,7 @@
 		899A2433268C7EB600AA81F6 /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A2430268C7EB600AA81F6 /* CGPoint+Extension.swift */; };
 		899A2438268C7F1400AA81F6 /* SocketHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A2437268C7F1400AA81F6 /* SocketHelper.swift */; };
 		899A243D268C814A00AA81F6 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A243C268C814A00AA81F6 /* Keys.swift */; };
+		899A244E268CA5B700AA81F6 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A244D268CA5B700AA81F6 /* MapViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		899A2430268C7EB600AA81F6 /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		899A2437268C7F1400AA81F6 /* SocketHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketHelper.swift; sourceTree = "<group>"; };
 		899A243C268C814A00AA81F6 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		899A244D268CA5B700AA81F6 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		C21078D1894DF479092EC4FE /* Pods-WhereAreU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereAreU.release.xcconfig"; path = "Target Support Files/Pods-WhereAreU/Pods-WhereAreU.release.xcconfig"; sourceTree = "<group>"; };
 		E61AC410DE9C1CDFDA4804AF /* Pods_WhereAreU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhereAreU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -90,6 +92,7 @@
 		899A240E268C7D3E00AA81F6 /* WhereAreU */ = {
 			isa = PBXGroup;
 			children = (
+				899A244C268CA59A00AA81F6 /* ViewModel */,
 				899A2435268C7EE800AA81F6 /* View */,
 				899A242D268C7EB600AA81F6 /* Utilities */,
 				899A242B268C7E9C00AA81F6 /* Application */,
@@ -128,6 +131,14 @@
 				899A2413268C7D3E00AA81F6 /* ViewController.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		899A244C268CA59A00AA81F6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				899A244D268CA5B700AA81F6 /* MapViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +281,7 @@
 				899A2412268C7D3E00AA81F6 /* SceneDelegate.swift in Sources */,
 				899A2431268C7EB600AA81F6 /* UIColor+Extensions.swift in Sources */,
 				899A2438268C7F1400AA81F6 /* SocketHelper.swift in Sources */,
+				899A244E268CA5B700AA81F6 /* MapViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

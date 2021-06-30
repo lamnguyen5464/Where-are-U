@@ -1,10 +1,3 @@
-////
-////  WS.swift
-////  Canvas-iOS
-////
-////  Created by Lam Nguyen on 25/06/2021.
-////
-//
 //import Foundation
 //import SocketIO
 //
