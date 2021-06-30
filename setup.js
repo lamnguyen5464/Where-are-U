@@ -31,7 +31,7 @@ const setupAndroid = () => {
 }
 
 const setupIOS = () => {
-	const iosConfigPath = path.slice(0, path.lastIndexOf("/") + 1) + "ios/Canvas-iOS/Utilities/Configs.swift";
+	const iosConfigPath = path.slice(0, path.lastIndexOf("/") + 1) + "ios/WhereAreU/Utilities/Configs.swift";
 
 	console.log('iosConfigPath', iosConfigPath)
 
