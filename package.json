@@ -1,0 +1,15 @@
+{
+  "name": "Drawing",
+  "version": "1.0.0",
+  "repository": "https://github.com/lamnguyen5464/Where-are-U.git",
+  "author": "lamnguyen5464 <lamnguyen5464@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "setup": "yarn ios ; yarn android ; cd backend && yarn all ; cd ..",
+    "backend": "cd backend && yarn start ; cd ..",
+    "ios": "node setup.js ios && cd ios && rm -rf Pods && rm -rf Podfile.lock && pod install ; cd ..",
+    "android": "node setup.js android",
+    "git_commit": "node setup.js commit",
+    "git_amend": "git add . && git commit --amend"
+  }
+}
