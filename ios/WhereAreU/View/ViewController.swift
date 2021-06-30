@@ -12,5 +12,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.view.addSubview(mapViewModel.map)
         
     }
+    
+    override func viewWillDisappear(_ animated: Bool){
+        super.viewWillDisappear(true)
+        SocketHelper.intance.disconnectSocket()
+    }
 }
 

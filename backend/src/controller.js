@@ -33,7 +33,7 @@ const socketListener = (socket) => {
 
 	const handleDataChange = debounce((res) => {
 		const parsedData = JSON.stringify(parseSafe(res))
-		console.log('on have new stroke', parseSafe(res).length)
+		console.log('on have new stroke', parseSafe(res))
 		socket.to(usersMap[socket.id]).emit("server_data", (parsedData));
 		socket.emit("server_data", (parsedData));
 	}, 10)

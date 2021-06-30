@@ -8,18 +8,27 @@ class MapViewModel: NSObject, CLLocationManagerDelegate{
     init(map: GMSMapView){
         super.init()
         self.map = map
-		self.locationManager = CLLocationManager()
-		self.locationManager.delegate = self
-		self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        
+        SocketHelper.intance.connectSocket()
     }
     
     func startUpdatingLocation(){
-        print("ahaerha")
         locationManager.startUpdatingLocation()
+        
     }
     
-    private func onUpdatedLocation(newCoordinate: CLLocation){
+    private func onUpdatedLocation(newCoordinate: CLLocationCoordinate2D){
         print("onUpdatedLocation", newCoordinate)
+        
+        let marker = GMSMarker()
+        marker.position = newCoordinate// CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
+        marker.title = "I am here"
+        marker.map = self.map
+        
+        SocketHelper.intance.emitCoordinateToServer(newCoordinate: newCoordinate)
     }
     
     
@@ -46,36 +55,14 @@ class MapViewModel: NSObject, CLLocationManagerDelegate{
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        onUpdatedLocation(newCoordinate: manager.location!)
+        //        onUpdatedLocation(newCoordinate: manager.location!.coordinate)
         
+        //test
+        onUpdatedLocation(newCoordinate: CLLocationCoordinate2D(latitude: 10.847673, longitude: 106.635067))
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Failed \(error)")
     }
-    
-    
 }
-
-
-
-// Creates a marker in the center of the map.
-
-//        let marker = GMSMarker()
-//        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
-//        marker.title = "Sydney"
-//        marker.snippet = "Australia"
-//        marker.map = mapView
-
-
-
-
-
-
-
-//        if CLLocationManager.locationServicesEnabled() {
-//            locationManager.delegate = self
-//            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-//            locationManager.startUpdatingLocation()
-//        }
 
