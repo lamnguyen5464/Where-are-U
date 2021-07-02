@@ -19,9 +19,7 @@ class MapViewModel: NSObject, CLLocationManagerDelegate{
         SocketHelper.intance.setEventListener(eventName: "server_data", resolve: {(data) in
             let dataString = data as? String ?? ""
             print(dataString)
-            
             if let jsonStroke = try? JSONSerialization.jsonObject(with: Data(dataString.utf8), options: []) as? [Any] {
-                
             }
         })
         
