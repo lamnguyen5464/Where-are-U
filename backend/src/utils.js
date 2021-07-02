@@ -14,4 +14,25 @@ const parseSafe = (data) => {
 	return result;
 }
 
-module.exports = { parseSafe }
+const extractNotNullKey = (obj) => {
+	const res = {}
+	Object.keys(obj || {}).forEach(key => {
+		if (obj[key]) {
+			res[key] = obj[key]
+		}
+	})
+	return res;
+}
+
+const notNullUnion = (arrayItem) => {
+	let res = {}
+	arrayItem?.forEach?.(item => {
+		res = {
+			...res,
+			...extractNotNullKey(item)
+		}
+	})
+	return res;
+}
+
+module.exports = { parseSafe, extractNotNullKey, notNullUnion }

@@ -45,7 +45,9 @@ class SocketHelper {
     
     func emitCoordinateToServer(newCoordinate: CLLocationCoordinate2D){
         let dic = ["latitude": newCoordinate.latitude,
-                   "longitude": newCoordinate.longitude]
+                   "longitude": newCoordinate.longitude,
+                   "id": self.socket.sid
+                   ]
         
         guard let jsonData = try? JSONSerialization.data(withJSONObject: dic, options: []) else { return }
         

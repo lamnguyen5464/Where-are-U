@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.whereareu.R
 import com.example.whereareu.helpers.PermissionHelper
+import com.example.whereareu.helpers.SocketHelper
 import com.example.whereareu.viewmodels.MapViewModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,11 +30,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapViewModel = MapViewModel(this)
 
+        SocketHelper.getIntance().initSocket(this)
+
         mapViewModel.checkLocationPermission()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        SocketHelper.getIntance().initSocket(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        SocketHelper.getIntance().initSocket(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mapViewModel.setMap(googleMap)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        SocketHelper.getIntance().forceDisconnect()
     }
 
     override fun onRequestPermissionsResult(

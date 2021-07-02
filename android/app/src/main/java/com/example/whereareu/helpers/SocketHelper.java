@@ -1,5 +1,6 @@
 package com.example.whereareu.helpers;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.net.URISyntaxException;
@@ -41,6 +42,26 @@ public class SocketHelper {
                 Log.d("@@@ error", e.getMessage());
             }
         }
+    }
+
+    public void initSocket(Context context){
+        doConnect(ConfigHelper.getConfigValue(context, "socket_url"));
+
+        this.socket.emit("request_join", "1");
+
+        setEventListener(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("@@@ EVENT_CONNECT", args.toString());
+            }
+        });
+
+        setEventListener(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.d("@@@ EVENT_DISCONNECT", args.toString());
+            }
+        });
     }
 
     public void forceDisconnect() {

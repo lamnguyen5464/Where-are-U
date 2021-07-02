@@ -1,5 +1,6 @@
 const debounce = require('lodash/debounce')
 const { parseSafe } = require('./utils')
+const { Rooms, Users } = require('./model')
 
 
 const usersMap = {};
@@ -12,6 +13,20 @@ const log = () => {
 	}, null, 3));
 }
 
+const handleLocationDataUser = (socket, res) => {
+	const data = typeof (res) === 'object' ? res : parseSafe(res) || {}
+	Users.modifyUserData({
+		id: socket.id,
+		...(data?.latitude && data?.longitude ? {
+			latitude: data.latitude,
+			longitude: data.longitude
+		} : {}),
+	})
+}
+
+const queryDataFromRoom = (roomId) => {
+	return JSON.stringify(Rooms.getDataFromRoom(roomId))
+}
 
 const socketListener = (socket) => {
 	// console.log(socket.id, "connected");
@@ -19,26 +34,44 @@ const socketListener = (socket) => {
 	socket.on("request_join", (room) => {
 		console.log(`${socket.id} requests to join ${room}`)
 
-		if (!rooms[room]) {
-			rooms[room] = [socket.id]
-		} else {
-			rooms[room].push(socket.id);
-		}
-		usersMap[socket.id] = room
-		// log()
+		// if (!rooms[room]) {
+		// 	rooms[room] = [socket.id]
+		// } else {
+		// 	rooms[room].push(socket.id);
+		// }
+		// usersMap[socket.id] = room
+		// // log()
+
+		Users.modifyUserData({
+			id: socket.id,
+			roomId: room
+		})
 
 		socket.join(room)
 	});
 
 
-	const handleDataChange = debounce((res) => {
-		const parsedData = JSON.stringify(parseSafe(res))
-		console.log('on have new stroke', parseSafe(res))
-		socket.to(usersMap[socket.id]).emit("server_data", (parsedData));
-		socket.emit("server_data", (parsedData));
-	}, 10)
+	socket.on("device_data", debounce((res) => {
 
-	socket.on("device_data", handleDataChange)
+		console.log('on received new location', parseSafe(res))
+
+		handleLocationDataUser(socket, res)
+
+		const userRoom = Users.getRoomById(socket.id)
+
+		if (!userRoom) {
+			console.error("cannot find this room")
+			return
+		}
+
+		const parsedData = queryDataFromRoom(userRoom)
+
+		console.log(`sending to Room ${userRoom}: ${JSON.stringify(parseSafe(parsedData), null, 2)}`)
+
+		socket.to(userRoom).emit("server_data", (parsedData));
+		socket.emit("server_data", (parsedData));
+	}, 100))
+
 
 	socket.on("disconnect", (socket) => {
 		console.log("User left");
