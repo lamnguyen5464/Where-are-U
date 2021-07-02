@@ -13,11 +13,11 @@ class SocketHelper {
         socket = manager.defaultSocket
     }
     
-    func connectSocket() {
-        disconnectSocket()
+    func connectSocket(callback: @escaping () -> Void) {
         socket.on(clientEvent: .connect) {[weak self] (data, ack) in
             print("socket connected", self?.socket.sid! ?? "")
             self?.socket.emit("request_join", "1")
+            callback()
         }
         
         socket.connect()
@@ -43,9 +43,15 @@ class SocketHelper {
         })
     }
     
+    func isMe(userId: String) -> Bool {
+        return userId == self.socket.sid
+    }
+    
     func emitCoordinateToServer(newCoordinate: CLLocationCoordinate2D){
         let dic = ["latitude": newCoordinate.latitude,
-                   "longitude": newCoordinate.longitude]
+                   "longitude": newCoordinate.longitude,
+                   "id": self.socket.sid ?? ""
+        ] as [String : Any]
         
         guard let jsonData = try? JSONSerialization.data(withJSONObject: dic, options: []) else { return }
         
