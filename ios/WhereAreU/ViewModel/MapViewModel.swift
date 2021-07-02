@@ -12,11 +12,9 @@ class MapViewModel: NSObject, CLLocationManagerDelegate{
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         
-        SocketHelper.intance.connectSocket()
-    }
-    
-    func startUpdatingLocation(){
-        locationManager.startUpdatingLocation()
+        SocketHelper.intance.connectSocket(callback: {
+            self.startUpdatingLocation()
+        })
         
         SocketHelper.intance.setEventListener(eventName: "server_data", resolve: {(data) in
             let dataString = data as? String ?? ""
@@ -27,6 +25,10 @@ class MapViewModel: NSObject, CLLocationManagerDelegate{
             }
         })
         
+    }
+    
+    func startUpdatingLocation(){
+        locationManager.startUpdatingLocation()
     }
     
     private func onUpdatedLocation(newCoordinate: CLLocationCoordinate2D){

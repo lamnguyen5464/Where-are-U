@@ -4,6 +4,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.whereareu.R
@@ -23,19 +26,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         this.actionBar?.hide()
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-
-        mapFragment.getMapAsync(this)
-
-        mapViewModel = MapViewModel(this)
 
         SocketHelper.getIntance().initSocket(this)
 
-        mapViewModel.checkLocationPermission()
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
-//        Log.d("@@@", "on Create")
+        mapViewModel = MapViewModel(this)
+        mapViewModel.checkLocationPermission()
     }
 
     override fun onRestart() {

@@ -48,7 +48,7 @@ const socketListener = (socket) => {
 		}
 		const parsedData = queryDataFromRoom(userRoom)
 
-		log(" 👉Sending: ", parseSafe(parsedData))
+		log(" 👉Emitting...: ", parseSafe(parsedData))
 
 		socket.to(userRoom).emit("server_data", (parsedData));
 		socket.emit("server_data", (parsedData));

@@ -62,8 +62,8 @@ const Users = {
 
 }
 
-// Users.modifyUserData({ id: "111", latitude: 1, longitude: 1, roomId: "1" })
-// Users.modifyUserData({ id: "222", latitude: 2, longitude: 2, roomId: "1" })
+Users.modifyUserData({ id: "111", latitude: 10.84952811, longitude: 106.6317175, roomId: "1" })
+Users.modifyUserData({ id: "222", latitude: 10.84812211, longitude: 106.63771899, roomId: "1" })
 
 // console.log(Rooms.getDataFromRoom("1"))
 
