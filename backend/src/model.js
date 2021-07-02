@@ -19,9 +19,15 @@ const Rooms = {
 			userData
 		])
 	},
+	removeUserFromRoom: (userId, roomId) => {
+		if (!userId || !roomId) {
+			return
+		}
+		delete Rooms.data[roomId]?.[userId]
+	},
 	removeFromPreviousRoom: (userData, previousRoomId) => {
-		if (userData.roomId && previousRoomId && userData.roomId !== previousRoomId)
-			delete Rooms.data[previousRoomId]?.[userData.id]
+		if (userData.roomId !== previousRoomId)
+			Rooms.removeUserFromRoom(userData.id, previousRoomId)
 	},
 	getDataFromRoom: (roomId) => {
 		const _res = [];
@@ -42,8 +48,16 @@ const Users = {
 		Users.data[id] = notNullUnion([Users.data[id], data])
 		Rooms.modifyUserToRoom(Users.data[id]);
 	},
+	getUser: (userId) => {
+		return Users.data[userId] || {}
+	},
 	getRoomById: (userId) => {
 		return Users.data[userId]?.roomId
+	},
+	deleteUser: (userId) => {
+		const user = Users.getUser(userId)
+		Rooms.removeUserFromRoom(user.id, user.roomId)
+		delete Users.data[userId]
 	}
 
 }

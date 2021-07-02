@@ -11,17 +11,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.example.whereareu.helpers.ConfigHelper
 import com.example.whereareu.helpers.JSONHelper
 import com.example.whereareu.helpers.PermissionHelper
 import com.example.whereareu.helpers.SocketHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import io.socket.client.Socket
+import com.google.android.gms.maps.model.*
 import io.socket.emitter.Emitter
+import org.json.JSONArray
 import org.json.JSONObject
 
 
@@ -95,27 +92,45 @@ class MapViewModel(activity: Activity) : LocationListener {
         //Listen
         SocketHelper.getIntance().setEventListener("server_data", Emitter.Listener {
             Log.d("@@@ response", it[0].toString())
-//            onHandleLocationResponse(JSONObject(it[0].toString()))
+            clearMap()
+            val listLocations: JSONArray = JSONHelper.getJsonArrayromString(it[0].toString())
+            for (index in 0..listLocations.length() - 1) {
+                val location = listLocations.getJSONObject(index)
+                onHandleLocationResponse(location)
+            }
         })
     }
 
-    fun onHandleLocationResponse(response: JSONObject) {
-        val latitude = JSONHelper.getFieldSafely(response, "latitude").toDouble()
-        val longitude = JSONHelper.getFieldSafely(response, "longitude").toDouble()
-        val id = JSONHelper.getFieldSafely(response, "id")
-
-
+    fun clearMap() {
         activity.runOnUiThread {
-            Log.d(
-                "@@@",
-                "Latitude: " + latitude + " , Longitude: " + longitude + ", id: " + id
-            )
-
-            val location = LatLng(latitude, longitude)
-
-            this.map?.addMarker(MarkerOptions().position(location).title("Here"))
-
+            this.map?.clear()
         }
+    }
+
+    fun onHandleLocationResponse(response: JSONObject) {
+
+        try {
+
+            val latitude = JSONHelper.getFieldSafely(response, "latitude").toDouble()
+            val longitude = JSONHelper.getFieldSafely(response, "longitude").toDouble()
+            val id = JSONHelper.getFieldSafely(response, "id")
+
+//        Log.d(
+//            "@@@",
+//            "Latitude: " + latitude + " , Longitude: " + longitude + ", id: " + id
+//        )
+
+            val coordinate = LatLng(latitude, longitude)
+
+            val title = if (id == SocketHelper.getIntance().id) "Me here!" else "You there?"
+
+            activity.runOnUiThread {
+                this.map?.addMarker(MarkerOptions().position(coordinate).title(title))
+            }
+        } catch (e: NumberFormatException) {
+            Log.d("@@@2", e.toString())
+        }
+
     }
 
     override fun onLocationChanged(location: Location) {

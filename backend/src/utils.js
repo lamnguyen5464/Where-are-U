@@ -35,4 +35,21 @@ const notNullUnion = (arrayItem) => {
 	return res;
 }
 
-module.exports = { parseSafe, extractNotNullKey, notNullUnion }
+const log = (header, content) => {
+	const textColor = TEXT_COLORS[++cnt % TEXT_COLORS.length]
+	console.log(textColor, `>>>>> ${header} <<<<<`)
+	console.log(textColor, JSON.stringify(content, null, 3))
+	console.log(textColor, "-------------------------\n\n")
+}
+
+let cnt = 0;
+const TEXT_COLORS = [
+	"\x1b[32m",
+	"\x1b[33m",
+	"\x1b[34m",
+	"\x1b[35m",
+	"\x1b[36m",
+	"\x1b[37m",
+]
+
+module.exports = { parseSafe, extractNotNullKey, notNullUnion, log }

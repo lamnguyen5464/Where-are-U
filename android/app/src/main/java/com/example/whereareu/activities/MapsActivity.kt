@@ -3,6 +3,7 @@ package com.example.whereareu.activities
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.whereareu.R
@@ -33,16 +34,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         SocketHelper.getIntance().initSocket(this)
 
         mapViewModel.checkLocationPermission()
+
+//        Log.d("@@@", "on Create")
     }
 
     override fun onRestart() {
         super.onRestart()
+//        Log.d("@@@", "on Restart")
         SocketHelper.getIntance().initSocket(this)
     }
 
     override fun onResume() {
         super.onResume()
-        SocketHelper.getIntance().initSocket(this)
+//        Log.d("@@@", "on Resume")
+//        SocketHelper.getIntance().initSocket(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

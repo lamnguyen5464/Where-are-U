@@ -1,27 +1,10 @@
 const debounce = require('lodash/debounce')
-const { parseSafe } = require('./utils')
+const { parseSafe, log } = require('./utils')
 const { Rooms, Users } = require('./model')
-
-
-const usersMap = {};
-const rooms = {};
-
-const log = () => {
-	console.log("@@@ LOG: ", JSON.stringify({
-		usersMap,
-		rooms,
-	}, null, 3));
-}
 
 const handleLocationDataUser = (socket, res) => {
 	const data = typeof (res) === 'object' ? res : parseSafe(res) || {}
-	Users.modifyUserData({
-		id: socket.id,
-		...(data?.latitude && data?.longitude ? {
-			latitude: data.latitude,
-			longitude: data.longitude
-		} : {}),
-	})
+	Users.modifyUserData(data)
 }
 
 const queryDataFromRoom = (roomId) => {
@@ -53,28 +36,28 @@ const socketListener = (socket) => {
 
 	socket.on("device_data", debounce((res) => {
 
-		console.log('on received new location', parseSafe(res))
+		// console.log('on received new location', paseSafe(res))
 
 		handleLocationDataUser(socket, res)
 
 		const userRoom = Users.getRoomById(socket.id)
 
 		if (!userRoom) {
-			console.error("cannot find this room")
+			console.error("\x1b[34m", "cannot find this room")
 			return
 		}
-
 		const parsedData = queryDataFromRoom(userRoom)
 
-		console.log(`sending to Room ${userRoom}: ${JSON.stringify(parseSafe(parsedData), null, 2)}`)
+		log(" 👉Sending: ", parseSafe(parsedData))
 
 		socket.to(userRoom).emit("server_data", (parsedData));
 		socket.emit("server_data", (parsedData));
 	}, 100))
 
 
-	socket.on("disconnect", (socket) => {
-		console.log("User left");
+	socket.on("disconnect", () => {
+		console.log(`${socket.id} left`);
+		Users.deleteUser(socket.id)
 	});
 }
 

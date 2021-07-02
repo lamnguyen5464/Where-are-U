@@ -18,6 +18,15 @@ class MapViewModel: NSObject, CLLocationManagerDelegate{
     func startUpdatingLocation(){
         locationManager.startUpdatingLocation()
         
+        SocketHelper.intance.setEventListener(eventName: "server_data", resolve: {(data) in
+            let dataString = data as? String ?? ""
+            print(dataString)
+            
+            if let jsonStroke = try? JSONSerialization.jsonObject(with: Data(dataString.utf8), options: []) as? [Any] {
+                
+            }
+        })
+        
     }
     
     private func onUpdatedLocation(newCoordinate: CLLocationCoordinate2D){
@@ -58,7 +67,7 @@ class MapViewModel: NSObject, CLLocationManagerDelegate{
         //        onUpdatedLocation(newCoordinate: manager.location!.coordinate)
         
         //test
-        onUpdatedLocation(newCoordinate: CLLocationCoordinate2D(latitude: 10.847673, longitude: 106.635067))
+        onUpdatedLocation(newCoordinate: CLLocationCoordinate2D(latitude: 10.84943893, longitude: 106.635764122))
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
