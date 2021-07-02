@@ -19,6 +19,7 @@ class JSONHelper {
             }
         }
 
+        @JvmStatic
         fun getFieldSafely(obj: JSONObject?, fieldName: String): String {
             if (obj == null) return ""
             return if (obj.has(fieldName)) obj.getString(fieldName) else "";

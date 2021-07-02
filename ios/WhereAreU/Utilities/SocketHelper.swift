@@ -13,10 +13,11 @@ class SocketHelper {
         socket = manager.defaultSocket
     }
     
-    func connectSocket() {
+    func connectSocket(callback: @escaping () -> Void) {
         socket.on(clientEvent: .connect) {[weak self] (data, ack) in
             print("socket connected", self?.socket.sid! ?? "")
             self?.socket.emit("request_join", "1")
+            callback()
         }
         
         socket.connect()
@@ -40,6 +41,10 @@ class SocketHelper {
         self.socket.on(eventName, callback: {(data, ack) in
             resolve(data[0])
         })
+    }
+    
+    func isMe(userId: String) -> Bool {
+        return userId == self.socket.sid
     }
     
     func emitCoordinateToServer(newCoordinate: CLLocationCoordinate2D){

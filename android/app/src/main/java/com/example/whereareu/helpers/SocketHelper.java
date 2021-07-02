@@ -32,6 +32,10 @@ public class SocketHelper {
         return isStillThere() ? this.socket.id() : "";
     }
 
+    public Boolean isMe(String userId){
+        return userId.equals(this.socket.id());
+    }
+
     public void doConnect(String url) {
         if (this.socket == null) {
             try {
@@ -47,7 +51,7 @@ public class SocketHelper {
     public void initSocket(Context context){
         doConnect(ConfigHelper.getConfigValue(context, "socket_url"));
 
-        this.socket.emit("request_join", "1");
+        this.socket.emit("request_join", "Mr Teo");
 
         setEventListener(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override

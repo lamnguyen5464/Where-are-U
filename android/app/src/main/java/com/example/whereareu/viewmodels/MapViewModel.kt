@@ -9,11 +9,17 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import com.example.whereareu.R
 import com.example.whereareu.helpers.JSONHelper
 import com.example.whereareu.helpers.PermissionHelper
 import com.example.whereareu.helpers.SocketHelper
+import com.example.whereareu.models.EndPoint
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -28,6 +34,9 @@ class MapViewModel(activity: Activity) : LocationListener {
     private var locationManager: LocationManager =
         activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     private val activity: Activity = activity
+    private val listEndPoints = ArrayList<EndPoint>()
+    private val listMarkers = ArrayList<MarkerOptions>()
+
 
     private var isGPSEnable: Boolean = false
     private var isGrantedPermission: Boolean = false
@@ -91,13 +100,10 @@ class MapViewModel(activity: Activity) : LocationListener {
 
         //Listen
         SocketHelper.getIntance().setEventListener("server_data", Emitter.Listener {
-            Log.d("@@@ response", it[0].toString())
-            clearMap()
+//            Log.d("@@@ response", it[0].toString())
             val listLocations: JSONArray = JSONHelper.getJsonArrayromString(it[0].toString())
-            for (index in 0..listLocations.length() - 1) {
-                val location = listLocations.getJSONObject(index)
-                onHandleLocationResponse(location)
-            }
+            onHandleNewResposne(listLocations)
+
         })
     }
 
@@ -107,30 +113,68 @@ class MapViewModel(activity: Activity) : LocationListener {
         }
     }
 
-    fun onHandleLocationResponse(response: JSONObject) {
-
-        try {
-
-            val latitude = JSONHelper.getFieldSafely(response, "latitude").toDouble()
-            val longitude = JSONHelper.getFieldSafely(response, "longitude").toDouble()
-            val id = JSONHelper.getFieldSafely(response, "id")
-
-//        Log.d(
-//            "@@@",
-//            "Latitude: " + latitude + " , Longitude: " + longitude + ", id: " + id
-//        )
-
-            val coordinate = LatLng(latitude, longitude)
-
-            val title = if (id == SocketHelper.getIntance().id) "Me here!" else "You there?"
-
-            activity.runOnUiThread {
-                this.map?.addMarker(MarkerOptions().position(coordinate).title(title))
-            }
-        } catch (e: NumberFormatException) {
-            Log.d("@@@2", e.toString())
+    fun onHandleNewResposne(response: JSONArray) {
+        clearMap()
+        listEndPoints.clear()
+        listMarkers.clear()
+        for (index in 0..response.length() - 1) {
+            val endpoint = EndPoint(response.getJSONObject(index))
+            listEndPoints.add(endpoint)
         }
+        drawMarkerOnMap()
+        updateListOnline()
+    }
 
+    fun updateListOnline() {
+        activity.runOnUiThread {
+            val listUser: LinearLayout = activity.findViewById(R.id.listUser)
+            activity.findViewById<TextView>(R.id.numOfOnlUsers).text = listEndPoints.size.toString() + " online"
+            listUser.removeAllViews()
+            listEndPoints.forEach {
+                listUser.addView(createUserCell(it))
+            }
+        }
+    }
+
+    fun createUserCell(endPoint: EndPoint): View? {
+        val view: ViewGroup? = null
+        val inflatedView = View.inflate(activity, R.layout.online_user_item, view)
+
+        inflatedView.findViewById<TextView>(R.id.ID).text = "ID: " + endPoint.id
+        inflatedView.findViewById<TextView>(R.id.latitude).text = "Latitude: " + endPoint.latitude
+        inflatedView.findViewById<TextView>(R.id.longitude).text = "Longitude: " + endPoint.longitude
+
+        inflatedView.setOnClickListener {
+            moveMapTo(endPoint.latLng)
+        }
+        return inflatedView
+    }
+
+    fun drawMarkerOnMap() {
+        listEndPoints.forEach {
+            val marker = MarkerOptions()
+            marker.position(it.latLng)
+            marker.title(it.id)
+//            marker.title(if (SocketHelper.getIntance().isMe(it.id)) "Me here!" else "You there?")
+            listMarkers.add(marker)
+        }
+        activity.runOnUiThread {
+            listMarkers.forEach {
+                this.map?.addMarker(it)
+            }
+        }
+    }
+
+    private fun moveMapTo(latLng: LatLng) {
+        this.map?.moveCamera(
+            CameraUpdateFactory.newLatLng(
+                LatLng(
+                    latLng.latitude,
+                    latLng.longitude
+                )
+            )
+        )
+        this.map?.animateCamera(CameraUpdateFactory.zoomTo(17f))
     }
 
     override fun onLocationChanged(location: Location) {
@@ -143,15 +187,7 @@ class MapViewModel(activity: Activity) : LocationListener {
 
         if (!didScaledLocation) {
             didScaledLocation = true
-            this.map?.moveCamera(
-                CameraUpdateFactory.newLatLng(
-                    LatLng(
-                        location.latitude,
-                        location.longitude
-                    )
-                )
-            )
-            this.map?.animateCamera(CameraUpdateFactory.zoomTo(17f))
+            moveMapTo(LatLng(location.latitude, location.longitude))
         }
 
 

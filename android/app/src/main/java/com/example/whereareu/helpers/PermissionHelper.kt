@@ -23,6 +23,5 @@ class PermissionHelper {
                 PERMISSION_LOCATION_CODE
             )
         }
-
     }
 }
