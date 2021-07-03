@@ -128,7 +128,8 @@ class MapViewModel(activity: Activity) : LocationListener {
     fun updateListOnline() {
         activity.runOnUiThread {
             val listUser: LinearLayout = activity.findViewById(R.id.listUser)
-            activity.findViewById<TextView>(R.id.numOfOnlUsers).text = listEndPoints.size.toString() + " online"
+            activity.findViewById<TextView>(R.id.numOfOnlUsers).text =
+                listEndPoints.size.toString() + " online"
             listUser.removeAllViews()
             listEndPoints.forEach {
                 listUser.addView(createUserCell(it))
@@ -142,7 +143,8 @@ class MapViewModel(activity: Activity) : LocationListener {
 
         inflatedView.findViewById<TextView>(R.id.ID).text = "ID: " + endPoint.id
         inflatedView.findViewById<TextView>(R.id.latitude).text = "Latitude: " + endPoint.latitude
-        inflatedView.findViewById<TextView>(R.id.longitude).text = "Longitude: " + endPoint.longitude
+        inflatedView.findViewById<TextView>(R.id.longitude).text =
+            "Longitude: " + endPoint.longitude
 
         inflatedView.setOnClickListener {
             moveMapTo(endPoint.latLng)
@@ -153,9 +155,17 @@ class MapViewModel(activity: Activity) : LocationListener {
     fun drawMarkerOnMap() {
         listEndPoints.forEach {
             val marker = MarkerOptions()
+            val isMe = SocketHelper.getIntance().isMe(it.id)
             marker.position(it.latLng)
             marker.title(it.id)
-//            marker.title(if (SocketHelper.getIntance().isMe(it.id)) "Me here!" else "You there?")
+            marker.icon(
+                BitmapDescriptorFactory.defaultMarker(
+                    if (isMe)
+                        BitmapDescriptorFactory.HUE_RED else BitmapDescriptorFactory.HUE_GREEN
+                )
+            )
+            marker.title(if (isMe) "Me here!" else "You there?")
+            marker.snippet(it.id)
             listMarkers.add(marker)
         }
         activity.runOnUiThread {

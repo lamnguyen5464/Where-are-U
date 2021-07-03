@@ -4,8 +4,8 @@
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
             <solid android:color="@color/BLACK_08" />
             <corners
-                android:topLeftRadius="18dp"
-                android:topRightRadius="18dp" />
+                android:topLeftRadius="8dp"
+                android:topRightRadius="8dp" />
             <gradient
                 android:angle="270"
                 android:centerColor="@color/BLACK_18"
@@ -18,8 +18,8 @@
             <padding android:top="12dp" />
             <solid android:color="@color/WHITE" />
             <corners
-                android:topLeftRadius="18dp"
-                android:topRightRadius="18dp" />
+                android:topLeftRadius="8dp"
+                android:topRightRadius="8dp" />
         </shape>
     </item>
 </layer-list>

@@ -51,7 +51,7 @@ public class SocketHelper {
     public void initSocket(Context context){
         doConnect(ConfigHelper.getConfigValue(context, "socket_url"));
 
-        this.socket.emit("request_join", "Mr Teo");
+        this.socket.emit("request_join", "1");
 
         setEventListener(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
