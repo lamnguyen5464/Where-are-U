@@ -3,10 +3,6 @@ package com.example.whereareu.activities
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.whereareu.R
@@ -18,9 +14,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 
 
+@Suppress("DEPRECATION")
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    lateinit var mapViewModel: MapViewModel
+    private lateinit var mapViewModel: MapViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +41,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         SocketHelper.getIntance().initSocket(this)
     }
 
-    override fun onResume() {
-        super.onResume()
+//    override fun onResume() {
+//        super.onResume()
 //        Log.d("@@@", "on Resume")
 //        SocketHelper.getIntance().initSocket(this)
-    }
+//    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mapViewModel.setMap(googleMap)
@@ -78,7 +75,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(
+            requestCode,
+            resultCode,
+            data
+        )
         mapViewModel.checkLocationPermission()
     }
 

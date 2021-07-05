@@ -1,6 +1,7 @@
 package com.example.whereareu.viewmodels
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -23,17 +24,15 @@ import com.example.whereareu.models.EndPoint
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-import io.socket.emitter.Emitter
 import org.json.JSONArray
 import org.json.JSONObject
 
 
-class MapViewModel(activity: Activity) : LocationListener {
+class MapViewModel(private val activity: Activity) : LocationListener {
 
     private var map: GoogleMap? = null
     private var locationManager: LocationManager =
         activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    private val activity: Activity = activity
     private val listEndPoints = ArrayList<EndPoint>()
     private val listMarkers = ArrayList<MarkerOptions>()
 
@@ -72,7 +71,7 @@ class MapViewModel(activity: Activity) : LocationListener {
         }
     }
 
-    fun onDonePermission() {
+    private fun onDonePermission() {
         if (isGPSEnable && isGrantedPermission) {
             getLocation()
             return
@@ -80,9 +79,9 @@ class MapViewModel(activity: Activity) : LocationListener {
         checkLocationPermission()
     }
 
-    fun getLocation() {
+    private fun getLocation() {
         if ((ActivityCompat.checkSelfPermission(
-                activity,
+                this.activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED)
         ) {
@@ -99,25 +98,25 @@ class MapViewModel(activity: Activity) : LocationListener {
         )
 
         //Listen
-        SocketHelper.getIntance().setEventListener("server_data", Emitter.Listener {
+        SocketHelper.getIntance().setEventListener("server_data") {
 //            Log.d("@@@ response", it[0].toString())
             val listLocations: JSONArray = JSONHelper.getJsonArrayromString(it[0].toString())
             onHandleNewResposne(listLocations)
 
-        })
+        }
     }
 
-    fun clearMap() {
+    private fun clearMap() {
         activity.runOnUiThread {
             this.map?.clear()
         }
     }
 
-    fun onHandleNewResposne(response: JSONArray) {
+    private fun onHandleNewResposne(response: JSONArray) {
         clearMap()
         listEndPoints.clear()
         listMarkers.clear()
-        for (index in 0..response.length() - 1) {
+        for (index in 0 until response.length()) {
             val endpoint = EndPoint(response.getJSONObject(index))
             listEndPoints.add(endpoint)
         }
@@ -125,7 +124,8 @@ class MapViewModel(activity: Activity) : LocationListener {
         updateListOnline()
     }
 
-    fun updateListOnline() {
+    @SuppressLint("SetTextI18n")
+    private fun updateListOnline() {
         activity.runOnUiThread {
             val listUser: LinearLayout = activity.findViewById(R.id.listUser)
             activity.findViewById<TextView>(R.id.numOfOnlUsers).text =
@@ -137,7 +137,8 @@ class MapViewModel(activity: Activity) : LocationListener {
         }
     }
 
-    fun createUserCell(endPoint: EndPoint): View? {
+    @SuppressLint("SetTextI18n")
+    private fun createUserCell(endPoint: EndPoint): View? {
         val view: ViewGroup? = null
         val inflatedView = View.inflate(activity, R.layout.online_user_item, view)
 
@@ -152,7 +153,7 @@ class MapViewModel(activity: Activity) : LocationListener {
         return inflatedView
     }
 
-    fun drawMarkerOnMap() {
+    private fun drawMarkerOnMap() {
         listEndPoints.forEach {
             val marker = MarkerOptions()
             val isMe = SocketHelper.getIntance().isMe(it.id)

@@ -8,8 +8,8 @@ import androidx.core.app.ActivityCompat
 
 class PermissionHelper {
     companion object {
-        val PERMISSION_LOCATION_CODE = 101
-        val INTENT_LOCATION_SETTING_CODE = 201
+        const val PERMISSION_LOCATION_CODE = 101
+        const val INTENT_LOCATION_SETTING_CODE = 201
 
         fun enableLocationSettings(activity: Activity) {
             val settingsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)

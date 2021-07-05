@@ -7,22 +7,20 @@ import java.io.IOException
 class JSONHelper {
     companion object {
 
-        fun getJsonObjFromString(string: String): JSONObject {
-            return JSONObject(string)
-        }
+//        fun getJsonObjFromString(string: String): JSONObject {
+//            return JSONObject(string)
+//        }
 
-        fun getJsonArrayromString(string: String): JSONArray {
-            try {
-                return JSONArray(string)
-            } catch (ioException: IOException) {
-                return JSONArray("[]")
-            }
+        fun getJsonArrayromString(string: String): JSONArray = try {
+            JSONArray(string)
+        } catch (ioException: IOException) {
+            JSONArray("[]")
         }
 
         @JvmStatic
         fun getFieldSafely(obj: JSONObject?, fieldName: String): String {
             if (obj == null) return ""
-            return if (obj.has(fieldName)) obj.getString(fieldName) else "";
+            return if (obj.has(fieldName)) obj.getString(fieldName) else ""
         }
 
     }
